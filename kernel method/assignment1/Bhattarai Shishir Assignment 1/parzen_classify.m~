@@ -1,0 +1,56 @@
+function y_pred = parzen_classify(ktrain_train, ktrain_test, y)
+  index_pos = find(y == 1);
+  index_neg = find(y == -1);
+  b_pos = 0;
+  b_neg = 0;
+  
+%   % b part for postive
+%   for i = index_pos'
+%     b_pos = b_pos + sum(ktrain_train(i,index_pos));
+%   end
+%   
+%   b_pos = b_pos / (0.5 * length(index_pos).^2);
+  b_pos = sum(sum(ktrain_train(index_pos, index_pos),1)) ./ (2 * length(index_pos).^2);
+  
+  
+%   % b part for negative
+%   for i = index_neg'
+%     b_neg = b_neg + sum(ktrain_train(i,index_neg));
+%   end
+%   
+%   b_neg = b_neg / (0.5 * length(index_neg).^2);
+  b_neg = sum(sum(ktrain_train(index_neg, index_neg),1)) ./ (2 * length(index_neg).^2);
+  
+  b = b_neg - b_pos;
+  
+  
+  [n, m] = size(ktrain_test');
+  
+  %prediction
+%   for i = 1:n
+%     for j = 1:m
+%       pred_value = 0;
+%       
+%       if(y(j) == -1)
+%         pred_value = sum(-1/(length(index_neg)) .* ktrain_train(:, j)); 
+%       else
+%         pred_value = sum(1/(length(index_pos)) .* ktrain_train(:, j));
+%       end
+%       
+%       % prediction
+%       if (pred_value > 0)
+%         y_pred(i) = 1;
+%       else
+%         y_pred(i) = -1;
+%       end
+%       
+%     end
+%   end
+
+ alpha = ones(m, 1) ./ length(index_pos);
+ alpha(index_neg) = -1./ length(index_neg);
+ 
+ y_pred = sign((alpha' * ktrain_test) + b);
+  
+
+end

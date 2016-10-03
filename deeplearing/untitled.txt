@@ -1,0 +1,9 @@
+targetData = T.drow('targetData')
+# cost 
+cost = T.sum((targetData-outputData)**2)/targetData.shape[1]
+# Theano-function to compute the cost
+computeCost = th.function([inputData,hiddenUnitWeights,hiddenUnitBiases,outputUnitWeights,outputUnitBiases,targetData],cost)
+# Then also for gradient computation
+modelParameters = [hiddenUnitWeights,hiddenUnitBiases,outputUnitWeights,outputUnitBiases]
+costGrad = T.grad(cost,modelParameters) 
+computeCostGrad = th.function([inputData,hiddenUnitWeights,hiddenUnitBiases,outputUnitWeights,outputUnitBiases,targetData],costGrad)
